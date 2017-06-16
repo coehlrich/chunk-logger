@@ -25,7 +25,7 @@ public class ChunkLogger {
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		
+		Config.preInit(event);
 	}
 	
 	@Mod.EventHandler

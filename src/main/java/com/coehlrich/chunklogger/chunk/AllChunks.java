@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.chunk.Chunk;
 
+import com.coehlrich.chunklogger.Config;
 import com.coehlrich.chunklogger.chunk.ChunkListOfPlayers;
 
 public class AllChunks {
@@ -62,7 +63,7 @@ public class AllChunks {
 			ArrayList<PlayerInChunk> playersToRemove = new ArrayList<PlayerInChunk>();
 			for (PlayerInChunk player : chunk.getPlayersInChunk()) {
 				if (player.hasLeft()) {
-					if (Calendar.getInstance().getTimeInMillis() - player.getLeaveTimeCalendar().getTimeInMillis() >= 21600000L) {
+					if (Calendar.getInstance().getTimeInMillis() - player.getLeaveTimeCalendar().getTimeInMillis() >= Config.millisecondsToDelete) {
 						playersToRemove.add(player);
 					}
 				}
