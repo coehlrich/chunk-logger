@@ -1,5 +1,8 @@
 package com.coehlrich.chunklogger;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
 import com.coehlrich.chunklogger.command.GetPlayersInChunk;
 import com.coehlrich.chunklogger.proxy.CommonProxy;
 
@@ -20,12 +23,15 @@ public class ChunkLogger {
 	public static final String MODNAME = "Chunk Logger";
 	public static final String VERSION = "1.1.0";
 	
+	public static Logger logger;
+	
 	@Mod.Instance(MODID)
 	public static ChunkLogger instance;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Config.preInit(event);
+		logger = event.getModLog();
+		ChunkLoggerConfig.preInit(event);
 	}
 	
 	@Mod.EventHandler
@@ -42,5 +48,9 @@ public class ChunkLogger {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new GetPlayersInChunk());
+	}
+	
+	public static void log(Level level, String message) {
+		logger.log(level, message);
 	}
 }

@@ -1,17 +1,14 @@
 package com.coehlrich.chunklogger.chunk;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.chunk.Chunk;
+import com.coehlrich.chunklogger.ChunkLoggerConfig;
 
-import com.coehlrich.chunklogger.Config;
-import com.coehlrich.chunklogger.chunk.ChunkListOfPlayers;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.chunk.Chunk;
 
 public class AllChunks {
 	
@@ -22,7 +19,7 @@ public class AllChunks {
 		if (!chunks.contains(chunkWithPlayers)) {
 			chunks.add(chunkWithPlayers);
 		}
-		getChunk(chunk).playerEnteredChunk(player);;
+		getChunk(chunk).playerEnteredChunk(player);
 	}
 	public static void playerLeft(Chunk chunk, EntityPlayerMP player) {
 		if (getChunk(chunk) != null && getChunk(chunk).hasPlayerBeenInChunk(player)) {
@@ -63,7 +60,13 @@ public class AllChunks {
 			ArrayList<PlayerInChunk> playersToRemove = new ArrayList<PlayerInChunk>();
 			for (PlayerInChunk player : chunk.getPlayersInChunk()) {
 				if (player.hasLeft()) {
-					if (Calendar.getInstance().getTimeInMillis() - player.getLeaveTimeCalendar().getTimeInMillis() >= Config.millisecondsToDelete) {
+					LocalDateTime date = player.leaveTimeCalendar.plus(ChunkLoggerConfig.timeFromLeft);
+					if (LocalDateTime.now().isAfter(date)) {
+						playersToRemove.add(player);
+					}
+				} else {
+					LocalDateTime date = player.enterTimeCalendar.plus(ChunkLoggerConfig.timeFromEnter);
+					if (LocalDateTime.now().isAfter(date)) {
 						playersToRemove.add(player);
 					}
 				}

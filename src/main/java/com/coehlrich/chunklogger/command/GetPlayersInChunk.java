@@ -2,6 +2,8 @@ package com.coehlrich.chunklogger.command;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -69,21 +71,32 @@ public class GetPlayersInChunk extends CommandBase {
 		ArrayList<PlayerInChunk> playersInChunk = (ArrayList<PlayerInChunk>) chunk.getPlayersInChunk().clone();
 		for (PlayerInChunk player : playersInChunk) {
 			String playerName = server.getPlayerProfileCache().getProfileByUUID(UUID.fromString(player.getPlayer())).getName();
-			String enterTime = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss").format(player.getEnterTimeCalendar().getTime());
+			String enterTime = player.getEnterTimeCalendar().format(DateTimeFormatter.ofPattern("u/M/d H:m:s"));
 			if (player.hasLeft()) {
-				String leaveTime = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss").format(player.getLeaveTimeCalendar().getTime());
-				Map<TimeUnit, Long> stayTime = player.getdifference();
-				ArrayList<TimeUnit> timeUnits = new ArrayList<TimeUnit>(stayTime.keySet());
-				StringBuilder allTime = new StringBuilder();
-				for (TimeUnit timeUnit : timeUnits) {
-					if (timeUnits.indexOf(timeUnit) == timeUnits.size()) {
-						allTime.delete(allTime.length() - 1, allTime.length());
-						allTime.append("and" + stayTime.get(timeUnit).toString() + " " + timeUnit.toString().toLowerCase() + "'s.");
-					} else {
-						allTime.append(stayTime.get(timeUnit).toString() + " " + timeUnit.toString().toLowerCase() + "'s, ");
-					}
+				String leaveTime = player.getLeaveTimeCalendar().format(DateTimeFormatter.ofPattern("u/M/d H:m:s"));
+				Duration stayTime = player.getStayTime();
+				Long years = stayTime.toDays() / 365L;
+				Long months = stayTime.toDays() / 30L;
+				Long days = stayTime.toDays();
+				Long hours = stayTime.toHours();
+				Long minutes = stayTime.toMinutes();
+				Long seconds = stayTime.getSeconds();
+				if (months > 11) {
+					months = months - (years * 12);
 				}
-				sender.addChatMessage(new TextComponentString(String.format("Player %s was in the chunk from %s to %s for %s", playerName, enterTime, leaveTime, allTime.toString())));
+				if (days > 29) {
+					days = days - (days / 30 * 30);
+				}
+				if (hours > 23) {
+					hours = hours - (hours / 24 * 24);
+				}
+				if (minutes > 59) {
+					minutes = minutes - (minutes / 60 * 60);
+				}
+				if (seconds > 59) {
+					seconds = seconds - (seconds / 60 * 60);
+				}
+				sender.addChatMessage(new TextComponentString(String.format("Player %s was in the chunk from %s to %s for %s years and %s months and %s days and %s hours and %s minutes and %s seconds.", playerName, enterTime, leaveTime, years, months, days, hours, minutes, seconds)));
 			} else {
 				sender.addChatMessage(new TextComponentString(String.format("Player %s was in the chunk from %s and has not left yet", playerName, enterTime)));
 			}

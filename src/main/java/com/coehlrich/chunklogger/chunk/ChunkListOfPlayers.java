@@ -2,6 +2,10 @@ package com.coehlrich.chunklogger.chunk;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -66,28 +70,12 @@ public class ChunkListOfPlayers {
 		int howManyTimesToLoop = listOfPlayers.tagCount();
 		for (int i = 0; i < howManyTimesToLoop; i++) {
 			NBTTagCompound nbt = listOfPlayers.getCompoundTagAt(i);
-			Calendar enterTime = Calendar.getInstance();
-			try {
-				enterTime.setTimeInMillis(new SimpleDateFormat("yyyyMMWWuukkmmss").parse(nbt.getString("EnterTime")).getTime());
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			LocalDateTime enterTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(nbt.getLong("enterTime")), ZoneId.systemDefault());
 			String player = nbt.getString("PlayerUUID");
 			if (nbt.getBoolean("HasLeft")) {
-				Calendar leaveTime = Calendar.getInstance();
-				try {
-					leaveTime.setTimeInMillis(new SimpleDateFormat("yyyyMMWWuukkmmss").parse(nbt.getString("LeaveTime")).getTime());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				NBTTagList stayTime = nbt.getTagList("StayTime", Constants.NBT.TAG_COMPOUND);
-				int howMuchToLoop = stayTime.tagCount();
-				Map<TimeUnit, Long> timeMap = new LinkedHashMap<TimeUnit, Long>();
-				for (int j = 0; j < howMuchToLoop; j++) {
-					NBTTagCompound time = stayTime.getCompoundTagAt(j);
-					timeMap.put(TimeUnit.valueOf(time.getString("TimeUnit")), time.getLong("time"));
-				}
-				playersInChunk.add(new PlayerInChunk(enterTime, leaveTime, timeMap, player));
+				LocalDateTime leaveTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(nbt.getLong("LeaveTime")), ZoneId.systemDefault());
+				Duration stayTime = Duration.ofMillis(nbt.getLong("StayTime"));
+				playersInChunk.add(new PlayerInChunk(enterTime, leaveTime, stayTime, player));
 			} else {
 				playersInChunk.add(new PlayerInChunk(enterTime, player));
 			}
