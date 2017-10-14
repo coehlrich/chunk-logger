@@ -4,7 +4,7 @@
  "name": "Chunk Logger",
  "description": "This mod lets you see who has been in a chunk",
  "version": "1.0.0",
- "mcversion": "1.10.2",
+ "mcversion": "1.11.2",
  "url": "",
  "updateUrl": "",
  "authorList": ["coehlrich"],
