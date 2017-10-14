@@ -28,12 +28,12 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public class GetPlayersInChunk extends CommandBase {
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "getplayersinchunk";
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
+	public String getUsage(ICommandSender sender) {
 		return "getplayersinchunk <ChunkX> <ChunkZ> <dimensionID";
 	}
 	
@@ -70,7 +70,7 @@ public class GetPlayersInChunk extends CommandBase {
 		Chunk chunk = new Chunk(FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionid), chunkX, chunkZ);
 		ChunkListOfPlayers chunkListOfPlayers = AllChunks.getChunk(chunk);
 		if (chunkListOfPlayers == null) {
-			sender.addChatMessage(new TextComponentString("Noone has been in that chunk yet"));
+			sender.sendMessage(new TextComponentString("Noone has been in that chunk yet"));
 			return;
 		}
 		ArrayList<PlayerInChunk> playersInChunk = (ArrayList<PlayerInChunk>) chunkListOfPlayers.getPlayersInChunk().clone();
@@ -101,9 +101,9 @@ public class GetPlayersInChunk extends CommandBase {
 				if (seconds > 59) {
 					seconds = seconds - (seconds / 60 * 60);
 				}
-				sender.addChatMessage(new TextComponentString(String.format("Player %s was in the chunk from %s to %s for %s years and %s months and %s days and %s hours and %s minutes and %s seconds.", playerName, enterTime, leaveTime, years, months, days, hours, minutes, seconds)));
+				sender.sendMessage(new TextComponentString(String.format("Player %s was in the chunk from %s to %s for %s years and %s months and %s days and %s hours and %s minutes and %s seconds.", playerName, enterTime, leaveTime, years, months, days, hours, minutes, seconds)));
 			} else {
-				sender.addChatMessage(new TextComponentString(String.format("Player %s was in the chunk from %s and has not left yet", playerName, enterTime)));
+				sender.sendMessage(new TextComponentString(String.format("Player %s was in the chunk from %s and has not left yet", playerName, enterTime)));
 			}
 		}
 	}
