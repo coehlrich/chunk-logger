@@ -30,7 +30,7 @@ public class AllChunks {
 	@Nullable
 	public static ChunkListOfPlayers getChunk(Chunk chunk2) {
 		for (ChunkListOfPlayers chunk1 : chunks) {
-			if (chunk1.getChunk().zPosition == chunk2.zPosition && chunk1.getChunk().xPosition == chunk2.xPosition && chunk1.getChunk().getWorld().provider.getDimension() == chunk2.getWorld().provider.getDimension()) {
+			if (chunk1.getChunk().getPos().equals(chunk2.getPos()) && chunk1.getChunk().getWorld().equals(chunk2.getWorld())) {
 				return chunk1;
 			}
 		}
@@ -47,7 +47,7 @@ public class AllChunks {
 	public static Chunk getChunkPlayerWasLastSeenIn(EntityPlayerMP player) {
 		for (ChunkListOfPlayers chunk : chunks) {
 			for (PlayerInChunk playerInChunk : chunk.playersInChunk) {
-				if (!playerInChunk.hasLeft() && playerInChunk.getPlayer().equals(player.getUniqueID().toString())) {
+				if (!playerInChunk.hasLeft() && playerInChunk.getPlayer().equals(player.getUniqueID())) {
 					return chunk.getChunk();
 				}
 			}

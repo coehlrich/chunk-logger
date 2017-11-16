@@ -2,19 +2,14 @@ package com.coehlrich.chunklogger;
 
 import java.io.File;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.helpers.Integers;
 
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.common.config.Config;
 
 public class ChunkLoggerConfig {
 	public static Duration timeFromLeft;
@@ -74,32 +69,32 @@ public class ChunkLoggerConfig {
 				int originalLength = timesString.length;
 				timesString = Arrays.copyOf(timesString, 6);
 				System.arraycopy(partOfDay, 0, timesString, originalLength - 1, partOfDay.length);
-				years = Integers.parseInt(timesString[0]);
+				years = Integer.parseInt(timesString[0]);
 				if (years > 100 || years < 0) {
 					years = 0;
 					ChunkLogger.log(Level.WARN, "Years was above 100 or below 0 so it was set to 0");
 				}
-				months = Integers.parseInt(timesString[1]);
+				months = Integer.parseInt(timesString[1]);
 				if (months > 11 || months < 0) {
 					months = 0;
 					ChunkLogger.log(Level.WARN, "Months was above 11 or below 0 so it was set to 0");
 				}
-				days = Integers.parseInt(timesString[2]);
+				days = Integer.parseInt(timesString[2]);
 				if (days > 30 || days < 0) {
 					days = 1;
 					ChunkLogger.log(Level.WARN, "Days was above 30 or below 0 so it was set to 1");
 				}
-				hours = Integers.parseInt(timesString[3]);
+				hours = Integer.parseInt(timesString[3]);
 				if (hours > 23 || hours < 0) {
 					hours = 0;
 					ChunkLogger.log(Level.WARN, "Hours was above 23 or below 0 so it was set to 0");
 				}
-				minutes = Integers.parseInt(timesString[4]);
+				minutes = Integer.parseInt(timesString[4]);
 				if (minutes > 59 || minutes < 0) {
 					minutes = 0;
 					ChunkLogger.log(Level.WARN, "Minutes was above 59 or below 0 so it was set to 0");
 				}
-				seconds = Integers.parseInt(timesString[5]);
+				seconds = Integer.parseInt(timesString[5]);
 				if (seconds > 59 || seconds < 0) {
 					seconds = 0;
 					ChunkLogger.log(Level.WARN, "Seconds was above 59 or below 0 so it was set to 0");

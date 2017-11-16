@@ -67,7 +67,7 @@ public class GetPlayersInChunk extends CommandBase {
 		} else {
 			dimensionid = 0;
 		}
-		Chunk chunk = new Chunk(FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionid), chunkX, chunkZ);
+		Chunk chunk = new Chunk(FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dimensionid), chunkX, chunkZ);
 		ChunkListOfPlayers chunkListOfPlayers = AllChunks.getChunk(chunk);
 		if (chunkListOfPlayers == null) {
 			sender.sendMessage(new TextComponentString("Noone has been in that chunk yet"));
@@ -75,7 +75,7 @@ public class GetPlayersInChunk extends CommandBase {
 		}
 		ArrayList<PlayerInChunk> playersInChunk = (ArrayList<PlayerInChunk>) chunkListOfPlayers.getPlayersInChunk().clone();
 		for (PlayerInChunk player : playersInChunk) {
-			String playerName = server.getPlayerProfileCache().getProfileByUUID(UUID.fromString(player.getPlayer())).getName();
+			String playerName = server.getPlayerProfileCache().getProfileByUUID(player.getPlayer()).getName();
 			String enterTime = player.getEnterTimeCalendar().format(DateTimeFormatter.ofPattern("u/M/d H:m:s"));
 			if (player.hasLeft()) {
 				String leaveTime = player.getLeaveTimeCalendar().format(DateTimeFormatter.ofPattern("u/M/d H:m:s"));

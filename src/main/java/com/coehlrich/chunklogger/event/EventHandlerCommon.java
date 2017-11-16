@@ -45,7 +45,7 @@ public class EventHandlerCommon {
 		int newChunkX = event.player.getPosition().getX() >> 4;
 		int newChunkZ = event.player.getPosition().getZ() >> 4;
 		Chunk newChunk = new Chunk(event.player.getEntityWorld(), (int) newChunkX, (int) newChunkZ);
-		if (oldChunk == null || !(oldChunk.zPosition == newChunk.zPosition && oldChunk.xPosition == newChunk.xPosition &&oldChunk.getWorld().provider.getDimension() == newChunk.getWorld().provider.getDimension())) {
+		if (oldChunk == null || !(oldChunk.getPos().equals(newChunk.getPos()) && oldChunk.getWorld().equals(newChunk.getWorld()))) {
 			AllChunks.playerEnteredChunk(newChunk, player);
 			if (oldChunk != null) {
 				AllChunks.playerLeft(oldChunk, player);
