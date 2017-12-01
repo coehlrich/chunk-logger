@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import com.coehlrich.chunklogger.command.GetPlayersInChunk;
+import com.coehlrich.chunklogger.command.GetPlayersInChunks;
 import com.coehlrich.chunklogger.proxy.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
@@ -48,6 +49,7 @@ public class ChunkLogger {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new GetPlayersInChunk());
+		event.registerServerCommand(new GetPlayersInChunks());
 	}
 	
 	public static void log(Level level, String message) {

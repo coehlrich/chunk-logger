@@ -1,14 +1,11 @@
 package com.coehlrich.chunklogger.command;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
+import com.coehlrich.chunklogger.PlayersInChunkListComparator;
 import com.coehlrich.chunklogger.chunk.AllChunks;
 import com.coehlrich.chunklogger.chunk.ChunkListOfPlayers;
 import com.coehlrich.chunklogger.chunk.PlayerInChunk;
@@ -22,19 +19,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
-import java.util.Map;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class GetPlayersInChunk extends CommandBase {
+public class GetPlayersInChunks extends CommandBase {
 
 	@Override
 	public String getName() {
-		return "getplayersinchunk";
+		return "getplayersinchunks";
 	}
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "getplayersinchunk <ChunkX> <ChunkZ> [dimensionID]";
+		return "getplayersinchunks <ChunkX> <ChunkZ> [dimensionID]";
 	}
 	
 	@Override
@@ -44,17 +40,20 @@ public class GetPlayersInChunk extends CommandBase {
 	
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		if (args.length < 2 || args.length > 3) {
-			throw new WrongUsageException("<ChunkX> <ChunkZ> [dimensionID]");
+		if (args.length < 4 || args.length > 5) {
+			throw new WrongUsageException("<FromChunkX> <FromChunkZ> <ToChunkX> <ToChunkZ> [dimensionID]");
 		}
-		int chunkX = Integer.parseInt(args[0]);
-		int chunkZ = Integer.parseInt(args[1]);
+		int fromChunkX = Integer.parseInt(args[0]);
+		int fromChunkZ = Integer.parseInt(args[1]);
+		int toChunkX = Integer.parseInt(args[2]);
+		int toChunkZ = Integer.parseInt(args[3]);
 		int dimensionID;
-		if (args.length < 3) {
+		if (args.length < 5) {
 			dimensionID = 0;
 		} else {
-			dimensionID = Integer.parseInt(args[2]);
+			dimensionID = Integer.parseInt(args[4]);
 		}
+
 		ArrayList<Integer> dimensionids = new ArrayList<Integer>();
 		dimensionids.toArray(DimensionManager.getIDs());
 		int dimensionid;
@@ -67,14 +66,34 @@ public class GetPlayersInChunk extends CommandBase {
 		} else {
 			dimensionid = 0;
 		}
-		Chunk chunk = new Chunk(FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dimensionid), chunkX, chunkZ);
-		ChunkListOfPlayers chunkListOfPlayers = AllChunks.getChunk(chunk);
-		if (chunkListOfPlayers == null) {
-			sender.sendMessage(new TextComponentString("Noone has been in that chunk yet"));
-			return;
+		
+		if (toChunkZ < fromChunkZ) {
+			int temp = fromChunkZ;
+			fromChunkZ = toChunkZ;
+			toChunkZ = temp;
 		}
-		ArrayList<PlayerInChunk> playersInChunk = (ArrayList<PlayerInChunk>) chunkListOfPlayers.getPlayersInChunk().clone();
-		for (PlayerInChunk player : playersInChunk) {
+		
+		if (toChunkX < fromChunkX) {
+			int temp = fromChunkX;
+			fromChunkX = toChunkX;
+			toChunkX = temp;
+		}
+		
+		ArrayList<PlayerInChunk> playersInChunks = new ArrayList<PlayerInChunk>();
+		for (int chunkX = fromChunkX; chunkX < toChunkX + 1; chunkX++) {
+			for (int chunkZ = fromChunkZ; chunkZ < toChunkZ + 1; chunkZ++) {
+				Chunk chunk = new Chunk(FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dimensionid), chunkX, chunkZ);
+				ChunkListOfPlayers chunkListOfPlayers = AllChunks.getChunk(chunk);
+				if (chunkListOfPlayers == null) {
+					continue;
+				}
+				
+				playersInChunks.addAll(chunkListOfPlayers.playersInChunk);
+			}
+		}
+		
+		Collections.sort(playersInChunks, new PlayersInChunkListComparator());
+		for (PlayerInChunk player : playersInChunks) {
 			String playerName = server.getPlayerProfileCache().getProfileByUUID(player.getPlayer()).getName();
 			String enterTime = player.getEnterTimeCalendar().format(DateTimeFormatter.ofPattern("u/M/d H:m:s"));
 			if (player.hasLeft()) {
