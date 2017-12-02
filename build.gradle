@@ -35,13 +35,13 @@ minecraft {
 
 repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
-	maven { url "https://oss.sonatype.org/content/groups/public/" }
-	maven { url "http://dvs1.progwml6.com/files/maven" }
-	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:FTBUtilities:82af0d44a7'
+    provided 'com.latmod.mods:FTBLib:4.2.5:api'
+    runtime 'com.latmod.mods:FTBLib:4.2.5:deobf'
+    provided 'com.latmod.mods:FTBUtilities:4.2.4:api'
+    runtime 'com.latmod.mods:FTBUtilities:4.2.4'
 }
 
 processResources
