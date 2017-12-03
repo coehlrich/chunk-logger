@@ -5,8 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.coehlrich.chunklogger.command.GetPlayersInChunk;
 import com.coehlrich.chunklogger.command.GetPlayersInChunks;
+import com.coehlrich.chunklogger.command.GetPlayersInClaimedChunks;
 import com.coehlrich.chunklogger.proxy.CommonProxy;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -14,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = ChunkLogger.MODID, name = ChunkLogger.MODNAME, version = ChunkLogger.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
+@Mod(modid = ChunkLogger.MODID, name = ChunkLogger.MODNAME, version = ChunkLogger.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*", dependencies = "after:ftbu")
 public class ChunkLogger {
 	
 	@SidedProxy(serverSide = "com.coehlrich.chunklogger.proxy.CommonProxy")
@@ -50,6 +52,9 @@ public class ChunkLogger {
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new GetPlayersInChunk());
 		event.registerServerCommand(new GetPlayersInChunks());
+		if (Loader.isModLoaded("ftbu")) {
+			event.registerServerCommand(new GetPlayersInClaimedChunks());
+		}
 	}
 	
 	public static void log(Level level, String message) {
