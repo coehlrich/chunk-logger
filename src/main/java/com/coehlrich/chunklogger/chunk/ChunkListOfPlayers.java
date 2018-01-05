@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -32,7 +33,7 @@ public class ChunkListOfPlayers {
 	}
 	
 	public void playerEnteredChunk(EntityPlayerMP player) {
-		playersInChunk.add(new PlayerInChunk(player.getUniqueID().toString()));
+		playersInChunk.add(new PlayerInChunk(EntityPlayer.getUUID(player.getGameProfile())));
 	}
 	
 	public void playerLeft(EntityPlayerMP player) {
@@ -47,7 +48,7 @@ public class ChunkListOfPlayers {
 		ArrayList<PlayerInChunk> playersInChunkReversed = (ArrayList<PlayerInChunk>) playersInChunk.clone();
 		Collections.reverse(playersInChunkReversed);
 		for (PlayerInChunk player : playersInChunkReversed) {
-			if (player.getPlayer().equals(playerToFind.getUniqueID().toString())) {
+			if (player.getPlayer().equals(playerToFind.getUniqueID())) {
 				return player;
 			}
 		}
@@ -71,7 +72,7 @@ public class ChunkListOfPlayers {
 		for (int i = 0; i < howManyTimesToLoop; i++) {
 			NBTTagCompound nbt = listOfPlayers.getCompoundTagAt(i);
 			LocalDateTime enterTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(nbt.getLong("enterTime")), ZoneId.systemDefault());
-			String player = nbt.getString("PlayerUUID");
+			UUID player = nbt.getUniqueId("PlayerUUID");
 			if (nbt.getBoolean("HasLeft")) {
 				LocalDateTime leaveTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(nbt.getLong("LeaveTime")), ZoneId.systemDefault());
 				Duration stayTime = Duration.ofMillis(nbt.getLong("StayTime"));
@@ -84,10 +85,21 @@ public class ChunkListOfPlayers {
 	
 	public boolean hasPlayerBeenInChunk(EntityPlayerMP playerToFind) {
 		for (PlayerInChunk player : playersInChunk) {
-			if (playerToFind.getUniqueID().toString().equals(player.getPlayer())) {
+			if (playerToFind.getUniqueID().equals(player.getPlayer())) {
 				return true;
 			}
 		}
+		return false;
+	}
+	
+	public boolean equals(ChunkListOfPlayers other) {
+		if (other == null)
+			return false;
+		else if (other == this)
+			return true;
+		Chunk otherChunk = other.getChunk();
+		if (otherChunk.getChunkCoordIntPair().equals(getChunk().getChunkCoordIntPair()) && otherChunk.getWorld() == getChunk().getWorld()) 
+			return true;
 		return false;
 	}
 	

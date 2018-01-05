@@ -47,7 +47,7 @@ public class AllChunks {
 	public static Chunk getChunkPlayerWasLastSeenIn(EntityPlayerMP player) {
 		for (ChunkListOfPlayers chunk : chunks) {
 			for (PlayerInChunk playerInChunk : chunk.playersInChunk) {
-				if (!playerInChunk.hasLeft() && playerInChunk.getPlayer().equals(player.getUniqueID().toString())) {
+				if (!playerInChunk.hasLeft() && playerInChunk.getPlayer().equals(player.getUniqueID())) {
 					return chunk.getChunk();
 				}
 			}
