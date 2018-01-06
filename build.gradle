@@ -38,10 +38,8 @@ repositories {
 }
 
 dependencies {
-    provided 'com.latmod.mods:FTBLib:4.2.5:api'
-    runtime 'com.latmod.mods:FTBLib:4.2.5:deobf'
-    provided 'com.latmod.mods:FTBUtilities:4.2.4:api'
-    runtime 'com.latmod.mods:FTBUtilities:4.2.4'
+    compile 'com.latmod.mods:FTBLib:4.3.0:deobf'
+    compile 'com.latmod.mods:FTBUtilities:4.3.0:deobf'
 }
 
 processResources

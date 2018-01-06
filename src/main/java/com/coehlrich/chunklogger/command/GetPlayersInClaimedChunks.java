@@ -10,13 +10,12 @@ import com.coehlrich.chunklogger.PlayersInChunkListComparator;
 import com.coehlrich.chunklogger.chunk.AllChunks;
 import com.coehlrich.chunklogger.chunk.ChunkListOfPlayers;
 import com.coehlrich.chunklogger.chunk.PlayerInChunk;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbu.data.ClaimedChunk;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -50,27 +49,26 @@ public class GetPlayersInClaimedChunks extends CommandBase {
 			throw new WrongUsageException("<Owner>");
 		}
 		
-		IClaimedChunks claimedChunks = FTBUtilitiesAPI.API.getClaimedChunks();
-		IForgePlayer forgePlayer = FTBLibAPI.API.getUniverse().getPlayer(args[0]);
+		ForgePlayer forgePlayer = Universe.get().getPlayer(args[0]);
 		
 		if (forgePlayer == null) {
 			throw new CommandException(String.format("There is no player called %s that has been on this server", args[0]));
 		}
 		
-		IForgeTeam team = forgePlayer.getTeam();
+		ForgeTeam team = forgePlayer.getTeam();
 		
 		if (team == null) {
 			throw new CommandException(String.format("Player %s is not in a team", forgePlayer.getName()));
 		}
 		
-		Set<? extends IClaimedChunk> teamClaimedChunks = claimedChunks.getTeamChunks(team);
+		Set<ClaimedChunk> teamClaimedChunks = ClaimedChunks.get().getTeamChunks(team);
 		
 		if (teamClaimedChunks.isEmpty()) {
 			throw new CommandException(String.format("team %s has not claimed any chunks", team.getName()));
 		}
 		
 		ArrayList<PlayerInChunk> playersInChunks = new ArrayList<PlayerInChunk>();
-		for (IClaimedChunk claimedChunk : teamClaimedChunks) {
+		for (ClaimedChunk claimedChunk : teamClaimedChunks) {
 			ChunkDimPos dimPos = claimedChunk.getPos();
 			WorldServer world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dimPos.dim);
 			Chunk chunk = world.getChunkFromChunkCoords(dimPos.posX, dimPos.posZ);
