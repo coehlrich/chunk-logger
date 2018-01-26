@@ -38,8 +38,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.latmod.mods:FTBLib:4.3.0:deobf'
-    compile 'com.latmod.mods:FTBUtilities:4.3.0:deobf'
+    compile 'com.latmod.mods:FTBLib:5.0.0:deobf'
+    compile 'com.latmod.mods:FTBUtilities:5.0.0:deobf'
 }
 
 processResources

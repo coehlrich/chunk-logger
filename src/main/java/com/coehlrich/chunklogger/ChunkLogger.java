@@ -52,7 +52,7 @@ public class ChunkLogger {
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new GetPlayersInChunk());
 		event.registerServerCommand(new GetPlayersInChunks());
-		if (Loader.isModLoaded("ftbu")) {
+		if (Loader.isModLoaded("ftbutilities")) {
 			event.registerServerCommand(new GetPlayersInClaimedChunks());
 		}
 	}

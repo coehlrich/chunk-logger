@@ -14,8 +14,8 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.data.ClaimedChunk;
-import com.feed_the_beast.ftbu.data.ClaimedChunks;
+import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
+import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
