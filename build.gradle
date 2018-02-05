@@ -34,12 +34,16 @@ minecraft {
 }
 
 repositories {
-	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	maven {
+        url = "http://maven.latmod.com/"
+    }
 }
 
 dependencies {
-    compile 'com.latmod.mods:FTBLib:5.0.0:deobf'
-    compile 'com.latmod.mods:FTBUtilities:5.0.0:deobf'
+    runtimeOnly "com.feed_the_beast.ftblib:FTBLib:4.2.5:deobf"
+    provided "com.feed_the_beast.ftblib:FTBLib:4.2.5:api"
+    runtimeOnly "com.feed_the_beast.ftbutilities:FTBUtilities:4.2.4"
+    provided "com.feed_the_beast.ftbutilities:FTBUtilities:4.2.4:api"
 }
 
 processResources
